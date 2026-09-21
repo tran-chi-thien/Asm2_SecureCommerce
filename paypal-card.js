@@ -37,6 +37,7 @@ function renderPayPalCardButton() {
                         tx: result.transactionId,
                         amt: result.amount,
                         cc: result.currency,
+                        item_name: result.itemName,
                         payment_method: paymentMethodField ? paymentMethodField.value : 'Card'
                     });
                     window.location.href = 'success.php?' + params.toString();

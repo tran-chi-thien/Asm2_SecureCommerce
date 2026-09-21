@@ -3,13 +3,6 @@ session_start();
 require_once __DIR__ . '/data.php';
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 $cartCount = array_sum($cart);
-$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
-$displayProducts = $products;
-if ($sort === 'price-low') {
-    usort($displayProducts, function ($left, $right) { return $left['price'] <=> $right['price']; });
-} elseif ($sort === 'price-high') {
-    usort($displayProducts, function ($left, $right) { return $right['price'] <=> $left['price']; });
-}
 $safe = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); };
 ?>
 <!DOCTYPE html>
@@ -41,12 +34,10 @@ $safe = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES,
                 <div class="row">
                     <div class="btn-group alg-right-pad">
                         <a class="btn btn-default" href="index.php"><strong><?php echo count($products); ?></strong> items</a>
-                        <a class="btn btn-danger" href="index.php?sort=price-low">Price Low</a>
-                        <a class="btn btn-danger" href="index.php?sort=price-high">Price High</a>
                     </div>
                 </div>
                 <div class="row">
-                    <?php foreach ($displayProducts as $product): ?>
+                    <?php foreach ($products as $product): ?>
                         <div class="col-md-4 text-center col-sm-6 col-xs-6">
                             <div class="thumbnail product-box">
                                 <img src="<?php echo $safe($product['image']); ?>" alt="<?php echo $safe($product['name']); ?>">

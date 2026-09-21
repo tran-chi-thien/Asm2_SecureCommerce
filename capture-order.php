@@ -1,7 +1,17 @@
 <?php
 session_start();
 header('Content-Type: application/json');
+require_once __DIR__ . '/data.php';
 require_once __DIR__ . '/paypal-api.php';
+
+$itemNames = array();
+$cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
+foreach ($products as $product) {
+    $quantity = isset($cart[$product['id']]) ? max(0, (int) $cart[$product['id']]) : 0;
+    if ($quantity > 0) {
+        $itemNames[] = $product['name'] . ' x ' . $quantity;
+    }
+}
 
 $orderId = isset($_POST['orderID']) ? trim($_POST['orderID']) : '';
 if ($orderId === '') {
@@ -35,6 +45,7 @@ try {
         'transactionId' => $transactionId,
         'amount' => $amount,
         'currency' => $currency,
+        'itemName' => implode(', ', $itemNames),
     ));
 } catch (RuntimeException $e) {
     http_response_code(502);
